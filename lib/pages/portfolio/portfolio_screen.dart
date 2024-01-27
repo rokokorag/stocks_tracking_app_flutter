@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PortfolioScreen extends StatelessWidget {
-  static const String name = 'home_screen';
+  static const String name = 'portfolio_screen';
 
   const PortfolioScreen({super.key});
 

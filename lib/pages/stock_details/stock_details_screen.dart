@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StockDetailsScreen extends StatelessWidget {
+  static const String name = 'stock_details_screen';
   const StockDetailsScreen({super.key});
 
   @override
