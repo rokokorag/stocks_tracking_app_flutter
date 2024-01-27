@@ -12,32 +12,35 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Stocks Tracking App'),
       ),
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 30),
-        child: Column(
-          children: [
-            const Image(image: AssetImage('assets/images/logo_app.png')),
-            Text('Login', style: theme.textTheme.titleLarge),
-            const SizedBox(height: 20.0),
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email',
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            children: [
+              const Image(image: AssetImage('assets/images/logo_app.png')),
+              Text('Login', style: theme.textTheme.titleLarge),
+              const SizedBox(height: 20.0),
+              const TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Email',
+                ),
               ),
-            ),
-            const SizedBox(height: 10.0),
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
+              const SizedBox(height: 10.0),
+              const TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password',
+                ),
               ),
-            ),
-            const SizedBox(height: 10.0),
-            FilledButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.login),
-                label: const Text("Login")),
-          ],
+              const SizedBox(height: 10.0),
+              FilledButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.login),
+                  label: const Text("Login")),
+            ],
+          ),
         ),
       ),
     );
