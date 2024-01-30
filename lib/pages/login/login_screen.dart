@@ -6,6 +6,7 @@ import 'package:stocks_tracking_app/providers/state_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String name = 'login_screen';
+  static const String link = '/login';
   const LoginScreen({super.key});
 
   @override
@@ -45,18 +46,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    //final stateProvider = context.watch<StateProvider>();
-
-    // if (context.mounted && context.watch<StateProvider>().userData.isLogin) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     setState(() {
-    //       isLoading = false;
-    //     });
-    //     context.go('/');
-    //   });
-    // } else {
-    //   print("printing...");
-    // }
 
     return Scaffold(
       backgroundColor: Colors.white,
