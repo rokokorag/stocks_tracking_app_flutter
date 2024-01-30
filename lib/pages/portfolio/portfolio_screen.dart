@@ -16,7 +16,9 @@ class PortfolioScreen extends StatelessWidget {
       body: const Center(
         child: Text('Portfolio Screen'),
       ),
-      drawer: const SideMenu(),
+      drawer: const SideMenu(
+        selectedMenu: 0,
+      ),
     );
   }
 }

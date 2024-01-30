@@ -17,5 +17,5 @@ class MenuItem {
 const appMenuItems = <MenuItem>[
   MenuItem(
       title: "Portfolio", link: PortfolioScreen.link, icon: Icons.dashboard),
-  MenuItem(title: "About", link: "/about", icon: Icons.info_outline),
+  MenuItem(title: "About", link: AboutScreen.link, icon: Icons.info_outline),
 ];

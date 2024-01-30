@@ -15,6 +15,11 @@ final appRouter = GoRouter(
       builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
+      path: '/about',
+      name: AboutScreen.name,
+      builder: (context, state) => const AboutScreen(),
+    ),
+    GoRoute(
       path: '/stockdetails',
       name: StockDetailsScreen.name,
       builder: (context, state) => const StockDetailsScreen(),
