@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stocks_tracking_app/config/router/app_router.dart';
+import 'package:stocks_tracking_app/providers/state_provider.dart';
 
 void main() {
   runApp(const MainApp());
@@ -10,10 +12,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Stocks Tracking App',
-      debugShowCheckedModeBanner: false,
-      routerConfig: appRouter,
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => StateProvider())],
+      child: MaterialApp.router(
+        title: 'Stocks Tracking App',
+        debugShowCheckedModeBanner: false,
+        routerConfig: appRouter,
+      ),
     );
   }
 }
