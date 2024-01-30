@@ -1,12 +1,12 @@
 import 'package:stocks_tracking_app/models/position_model.dart';
 
-class UserData {
-  final String email;
-  final String token;
-  final bool isLogin;
+class UserDataPortfolio {
   List<PositionModel> portfolio = List<PositionModel>.empty();
   double currentValue = 0;
   double initialInvestment = 0;
 
-  UserData({required this.email, required this.token, required this.isLogin});
+  UserDataPortfolio(
+      {required this.currentValue,
+      required this.initialInvestment,
+      required this.portfolio});
 }
