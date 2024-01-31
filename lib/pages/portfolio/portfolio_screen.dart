@@ -47,6 +47,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
   @override
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
+
     List<PositionModel> positions =
         context.watch<StateProvider>().userData.portfolio;
     double currentValue = context.watch<StateProvider>().userData.currentValue;

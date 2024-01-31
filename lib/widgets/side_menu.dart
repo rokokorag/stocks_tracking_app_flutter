@@ -31,7 +31,6 @@ class _SideMenuState extends State<SideMenu> {
         });
         final menuItem = appMenuItems[value];
         context.go(menuItem.link);
-        //widget.scaffoldKey.currentState?.closeDrawer();
       },
       children: [
         Padding(
@@ -41,10 +40,16 @@ class _SideMenuState extends State<SideMenu> {
         ...appMenuItems.map((menu) => NavigationDrawerDestination(
             icon: Icon(menu.icon), label: Text(menu.title))),
         const Divider(),
-        TextButton.icon(
-          onPressed: () {},
-          label: const Text("Sign out"),
-          icon: const Icon(Icons.logout),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 50),
+          child: TextButton.icon(
+            onPressed: () {
+              context.read<StateProvider>().logOut();
+              context.go('/login');
+            },
+            label: const Text("Sign out"),
+            icon: const Icon(Icons.logout),
+          ),
         )
       ],
     );

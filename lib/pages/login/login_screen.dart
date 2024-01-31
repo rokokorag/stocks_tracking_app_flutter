@@ -45,12 +45,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Stocks Tracking App'),
+        title: Text(
+          'Stocks Tracking App',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary),
+        ),
       ),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
@@ -58,8 +61,21 @@ class _LoginScreenState extends State<LoginScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             children: [
-              const Image(image: AssetImage('assets/images/logo_app.png')),
-              Text('Login', style: theme.textTheme.titleLarge),
+              const SizedBox(
+                height: 20,
+              ),
+              const Image(
+                image: AssetImage('assets/images/logo_app.png'),
+                height: 200,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const Text('Login',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40,
+                  )),
               const SizedBox(height: 20.0),
               TextField(
                 controller: emailController,

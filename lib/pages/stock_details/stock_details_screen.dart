@@ -60,7 +60,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
               positionData.ticker),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              final (SymbolStock s, CurrentRequestStatus r) =
+              final (SymbolStock s, _) =
                   snapshot.data as (SymbolStock, CurrentRequestStatus);
               return _StockDetails(
                   positionData: positionData, symbolStockDetails: s);

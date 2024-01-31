@@ -25,4 +25,8 @@ class StateProvider extends ChangeNotifier {
     currentRequestStatus = requestStatus;
     notifyListeners();
   }
+
+  void logOut() {
+    userData = UserData(email: '', token: '', isLogin: false);
+  }
 }
