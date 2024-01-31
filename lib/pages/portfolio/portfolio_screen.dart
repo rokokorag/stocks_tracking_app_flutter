@@ -17,10 +17,16 @@ class PortfolioScreen extends StatefulWidget {
 
 class _PortfolioScreenState extends State<PortfolioScreen> {
   final NumberFormat f = NumberFormat('#,##0.00', 'en_US');
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
     context.read<StateProvider>().getPortfolio();
+  }
+
+  Future<void> onRefresh() async {
+    context.read<StateProvider>().getPortfolio();
+    return Future<void>.delayed(const Duration(seconds: 2));
   }
 
   @override
@@ -36,32 +42,38 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
       appBar: AppBar(
         title: const Text('Stocks Tracking App'),
       ),
-      body: SingleChildScrollView(
-        physics: const ScrollPhysics(),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '\$${f.format(currentValue)}',
-              style: theme.textTheme.titleLarge,
-            ),
-            Text(
-              '\$${f.format(currentValue - initialInvestment)} (${(((currentValue - initialInvestment) / initialInvestment) * 100).toStringAsFixed(2)}%)',
-              style: theme.textTheme.titleMedium,
-            ),
-            ListView.separated(
-              shrinkWrap: true,
-              itemCount: positions.length,
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(height: 1),
-              itemBuilder: (context, index) {
-                final position = positions[index];
-                return _StockListItem(
-                  position: position,
-                );
-              },
-            ),
-          ],
+      body: RefreshIndicator(
+        onRefresh: onRefresh,
+        edgeOffset: 10,
+        strokeWidth: 2,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '\$${f.format(currentValue)}',
+                style: theme.textTheme.titleLarge,
+              ),
+              Text(
+                '\$${f.format(currentValue - initialInvestment)} (${(((currentValue - initialInvestment) / initialInvestment) * 100).toStringAsFixed(2)}%)',
+                style: theme.textTheme.titleMedium,
+              ),
+              ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: positions.length,
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(height: 1),
+                itemBuilder: (context, index) {
+                  final position = positions[index];
+                  return _StockListItem(
+                    position: position,
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
       drawer: const SideMenu(
