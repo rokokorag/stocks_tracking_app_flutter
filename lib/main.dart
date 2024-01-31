@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stocks_tracking_app/config/app_theme.dart';
 import 'package:stocks_tracking_app/config/router/app_router.dart';
 import 'package:stocks_tracking_app/providers/state_provider.dart';
 
@@ -18,6 +19,7 @@ class MainApp extends StatelessWidget {
         title: 'Stocks Tracking App',
         debugShowCheckedModeBanner: false,
         routerConfig: appRouter,
+        theme: AppTheme().getTheme(),
       ),
     );
   }
