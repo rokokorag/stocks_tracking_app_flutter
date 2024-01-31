@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -158,7 +159,9 @@ class _StockListItem extends StatelessWidget {
           )
         ],
       ),
-      onTap: () {},
+      onTap: () {
+        context.push('/stockdetails', extra: position);
+      },
     );
   }
 }
