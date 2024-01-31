@@ -22,11 +22,23 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
     themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          positionData.name,
-          style:
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
-        ),
+        title: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+                text: positionData.name,
+                style: const TextStyle(
+                    fontSize: 22,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: '\n(${positionData.ticker})',
+                    style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ])),
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: themeData.primaryColor,
       ),
