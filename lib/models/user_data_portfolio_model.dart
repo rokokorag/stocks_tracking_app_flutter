@@ -17,8 +17,9 @@ class UserDataPortfolioModel {
         listPositions.map((i) => PositionModel.fromJson(i)).toList();
 
     return UserDataPortfolioModel(
-        currentValue: json['current_value'],
-        initialInvestment: json['initial_investment'],
+        currentValue: double.tryParse(json['current_value'].toString()) ?? 0.0,
+        initialInvestment:
+            double.tryParse(json['initial_investment'].toString()) ?? 0.0,
         positions: positions);
   }
 

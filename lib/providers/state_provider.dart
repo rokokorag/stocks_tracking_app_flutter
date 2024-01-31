@@ -3,7 +3,6 @@ import 'package:stocks_tracking_app/entities/current_request_status.dart';
 import 'package:stocks_tracking_app/entities/user_data.dart';
 import 'package:stocks_tracking_app/helpers/do_login.dart';
 import 'package:stocks_tracking_app/helpers/get_portfolio.dart';
-import 'package:stocks_tracking_app/models/user_data_portfolio_model.dart';
 
 class StateProvider extends ChangeNotifier {
   final DoLoginRequest doLoginRequest = DoLoginRequest();
