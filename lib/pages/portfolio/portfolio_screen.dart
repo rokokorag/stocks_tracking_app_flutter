@@ -19,6 +19,7 @@ class PortfolioScreen extends StatefulWidget {
 class _PortfolioScreenState extends State<PortfolioScreen> {
   final NumberFormat f = NumberFormat('#,##0.00', 'en_US');
   bool isLoading = false;
+  ThemeData themeData = ThemeData();
   @override
   void initState() {
     super.initState();
@@ -44,7 +45,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
+    themeData = Theme.of(context);
     List<PositionModel> positions =
         context.watch<StateProvider>().userData.portfolio;
     double currentValue = context.watch<StateProvider>().userData.currentValue;
@@ -53,12 +54,19 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stocks Tracking App'),
+        title: const Text(
+          'Stocks Tracking App',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: themeData.primaryColor,
       ),
       body: RefreshIndicator(
         onRefresh: onRefresh,
-        edgeOffset: 10,
+        edgeOffset: 0,
         strokeWidth: 2,
+        backgroundColor: themeData.primaryColor,
+        color: Colors.white,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Skeletonizer(
@@ -66,25 +74,30 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const SizedBox(
+                  height: 10,
+                ),
                 Text(
                   '\$${f.format(currentValue)}',
-                  style: theme.textTheme.titleLarge,
+                  style: themeData.textTheme.headlineLarge,
                 ),
                 Text(
                   '\$${f.format(currentValue - initialInvestment)} (${(((currentValue - initialInvestment) / initialInvestment) * 100).toStringAsFixed(2)}%)',
-                  style: theme.textTheme.titleMedium,
+                  style: themeData.textTheme.titleMedium,
                 ),
                 ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: positions.length,
                   separatorBuilder: (BuildContext context, int index) =>
-                      const Divider(height: 1),
+                      Divider(
+                          height: 0,
+                          thickness: 1,
+                          color: themeData.primaryColor),
                   itemBuilder: (context, index) {
                     final position = positions[index];
                     return _StockListItem(
-                      position: position,
-                    );
+                        position: position, themeData: themeData);
                   },
                 ),
               ],
@@ -101,8 +114,9 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
 class _StockListItem extends StatelessWidget {
   final PositionModel position;
+  final ThemeData themeData;
   final NumberFormat f = NumberFormat('#,##0.00', 'en_US');
-  _StockListItem({required this.position});
+  _StockListItem({required this.position, required this.themeData});
 
   @override
   Widget build(BuildContext context) {
@@ -112,25 +126,36 @@ class _StockListItem extends StatelessWidget {
             100);
 
     return ListTile(
-      title: Text('${position.name} (${position.ticker})'),
+      title: Text('${position.name} (${position.ticker})',
+          style: const TextStyle(fontWeight: FontWeight.w700)),
       subtitle: Text('${position.quantity.toString()} stocks'),
       leading: Image.network(
         position.logoUrl,
-        height: 20,
-        width: 20,
+        height: 30,
+        width: 30,
         fit: BoxFit.fitWidth,
       ),
-      trailing: Column(
+      dense: false,
+      contentPadding: const EdgeInsets.only(left: 10.0, right: 5.0),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            '\$${f.format(position.lastPrice)}',
-            textAlign: TextAlign.right,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '\$${f.format(position.lastPrice)}',
+              ),
+              Text(
+                '${(diferencePrice > 0 ? '+' : '')}${f.format(diferencePrice)} (${(pctGain > 0 ? '+' : '')}${(pctGain).toStringAsFixed(2)})%',
+              ),
+            ],
           ),
-          Text(
-            '${(diferencePrice > 0 ? '+' : '')}${f.format(diferencePrice)} (${(pctGain > 0 ? '+' : '')}${(pctGain).toStringAsFixed(2)})%',
-            textAlign: TextAlign.end,
-          ),
-          // const Icon(Icons.arrow_forward_ios_rounded)
+          Icon(
+            Icons.arrow_forward_ios_rounded,
+            color: themeData.primaryColor,
+          )
         ],
       ),
       onTap: () {},
