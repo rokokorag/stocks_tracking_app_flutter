@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stocks_tracking_app/models/position_model.dart';
 import 'package:stocks_tracking_app/providers/state_provider.dart';
 import 'package:stocks_tracking_app/widgets/side_menu.dart';
@@ -21,12 +22,24 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      isLoading = true;
+    });
     context.read<StateProvider>().getPortfolio();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> onRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
     context.read<StateProvider>().getPortfolio();
-    return Future<void>.delayed(const Duration(seconds: 2));
+    await Future<void>.delayed(const Duration(seconds: 2));
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -48,31 +61,34 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
         strokeWidth: 2,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '\$${f.format(currentValue)}',
-                style: theme.textTheme.titleLarge,
-              ),
-              Text(
-                '\$${f.format(currentValue - initialInvestment)} (${(((currentValue - initialInvestment) / initialInvestment) * 100).toStringAsFixed(2)}%)',
-                style: theme.textTheme.titleMedium,
-              ),
-              ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: positions.length,
-                separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(height: 1),
-                itemBuilder: (context, index) {
-                  final position = positions[index];
-                  return _StockListItem(
-                    position: position,
-                  );
-                },
-              ),
-            ],
+          child: Skeletonizer(
+            enabled: isLoading,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '\$${f.format(currentValue)}',
+                  style: theme.textTheme.titleLarge,
+                ),
+                Text(
+                  '\$${f.format(currentValue - initialInvestment)} (${(((currentValue - initialInvestment) / initialInvestment) * 100).toStringAsFixed(2)}%)',
+                  style: theme.textTheme.titleMedium,
+                ),
+                ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: positions.length,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final position = positions[index];
+                    return _StockListItem(
+                      position: position,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
