@@ -16,8 +16,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   bool isLogin = false;
-  final emailController = TextEditingController(text: 'john@example.com');
-  final passwordController = TextEditingController(text: 'password');
+  final emailController = TextEditingController(text: '');
+  final passwordController = TextEditingController(text: '');
 
   @override
   void initState() {
