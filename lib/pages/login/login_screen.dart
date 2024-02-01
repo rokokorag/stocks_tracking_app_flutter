@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const Text('Login',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 40,
+                    fontSize: 30,
                   )),
               const SizedBox(height: 20.0),
               TextField(
@@ -126,6 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       icon: const Icon(Icons.login),
                       label: const Text("Login")),
+              const SizedBox(
+                height: 50,
+              )
             ],
           ),
         ),
