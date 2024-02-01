@@ -35,11 +35,33 @@ class _SideMenuState extends State<SideMenu> {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(28, 10, 16, 10),
-          child: Text(context.read<StateProvider>().userData.email),
+          child: Text(
+            context.read<StateProvider>().userData.email,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: Theme.of(context).colorScheme.primary),
+          ),
+        ),
+        Divider(
+          height: 1,
+          thickness: 0.5,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        const SizedBox(
+          height: 10,
         ),
         ...appMenuItems.map((menu) => NavigationDrawerDestination(
             icon: Icon(menu.icon), label: Text(menu.title))),
-        const Divider(),
+        const SizedBox(
+          height: 10,
+        ),
+        Divider(
+          height: 1,
+          thickness: 0.5,
+          color: Theme.of(context).colorScheme.primary,
+        ),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 50),
           child: TextButton.icon(
