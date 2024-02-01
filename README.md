@@ -30,8 +30,14 @@ flutter run -d <emulator_id>
 
 ## Results
 
-
+<div>
+<img src="/images/login_image.png" alt="Login screen image" height="500">
+<img src="/images/positions_image.png" alt="Positions list screen image" height="500">
+<img src="/images/position_details_image.png" alt="Position details screen image" height="500">
+</div>
 
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+:)
