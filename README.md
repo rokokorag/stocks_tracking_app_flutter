@@ -28,6 +28,10 @@ Finally, use the `flutter run` command, selecting your preferred emulator (remem
 flutter run -d <emulator_id>
 ```
 
+## Results
+
+
+
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
