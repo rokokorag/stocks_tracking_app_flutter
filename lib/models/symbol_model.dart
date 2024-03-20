@@ -1,6 +1,4 @@
 import 'package:stocks_tracking_app/entities/symbolStock.dart';
-import 'package:stocks_tracking_app/entities/user_data_portfolio.dart';
-import 'package:stocks_tracking_app/models/position_model.dart';
 
 class SymbolModel {
   final String ticker;
