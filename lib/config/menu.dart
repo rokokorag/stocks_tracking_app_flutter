@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stocks_tracking_app/pages/screens.dart';
+import 'package:stocks_tracking_app/presentation/pages/screens.dart';
 
 class MenuItem {
   final String title;

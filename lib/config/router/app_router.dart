@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:stocks_tracking_app/pages/screens.dart';
+import 'package:stocks_tracking_app/presentation/pages/screens.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/login',
