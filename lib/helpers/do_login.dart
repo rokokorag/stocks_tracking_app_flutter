@@ -17,12 +17,14 @@ class DoLoginRequest {
         body:
             jsonEncode(<String, String>{'email': email, 'password': password}));
 
+    print(response.statusCode);
+    print(response.body);
     switch (response.statusCode) {
       case HttpStatus.ok:
         UserDataModel user = UserDataModel.fromJson(jsonDecode(response.body));
         return (
           user.toUserDataEntity(email, true),
-          CurrentRequestStatus('', response.statusCode)
+          CurrentRequestStatus('OK', response.statusCode)
         );
       case HttpStatus.badRequest || HttpStatus.unauthorized:
         UserDataModel user =

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
+import 'package:stocks_tracking_app/presentation/blocs/user_data_bloc/user_data_bloc.dart';
 
-import 'package:stocks_tracking_app/providers/state_provider.dart';
+//import 'package:stocks_tracking_app/providers/state_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String name = 'login_screen';
@@ -45,92 +47,112 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return BlocListener<UserDataBloc, UserDataState>(
+      listener: (context, state) {
+        setState(() {
+          isLoading = false;
+        });
+        if (state is GetUserDataOKState) {
+          context.go('/');
+        } else {
+          showCustomSnackbar(context,
+              (state as GetUserDataLoginFailState).requestStatus.details);
+        }
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        title: Text(
-          'Stocks Tracking App',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: Text(
+            'Stocks Tracking App',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary),
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              const Image(
-                image: AssetImage('assets/images/logo_app.png'),
-                height: 200,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Text('Login',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  )),
-              const SizedBox(height: 20.0),
-              TextField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Email',
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-              const SizedBox(height: 10.0),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
+                const Image(
+                  image: AssetImage('assets/images/logo_app.png'),
+                  height: 200,
                 ),
-              ),
-              const SizedBox(height: 10.0),
-              isLoading
-                  ? const CircularProgressIndicator(
-                      strokeWidth: 2,
-                    )
-                  : FilledButton.icon(
-                      onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await context.read<StateProvider>().doLogin(
-                            emailController.text.trim(),
-                            passwordController.text);
-                        setState(() {
-                          isLoading = false;
-                        });
-                        if (!context.mounted) return;
-                        if (context.read<StateProvider>().userData.isLogin) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            context.go('/');
+                const SizedBox(
+                  height: 15,
+                ),
+                const Text('Login',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    )),
+                const SizedBox(height: 20.0),
+                TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Email',
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                isLoading
+                    ? const CircularProgressIndicator(
+                        strokeWidth: 2,
+                      )
+                    : FilledButton.icon(
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
                           });
-                        } else {
-                          showCustomSnackbar(
-                              context,
-                              context
-                                  .read<StateProvider>()
-                                  .currentRequestStatus
-                                  .details);
-                        }
-                      },
-                      icon: const Icon(Icons.login),
-                      label: const Text("Login")),
-              const SizedBox(
-                height: 50,
-              )
-            ],
+
+                          context.read<UserDataBloc>().doLogin(
+                              emailController.text.trim(),
+                              passwordController.text);
+
+                          // This code commented works with provider
+                          // await context.read<StateProvider>().doLogin(
+                          //     emailController.text.trim(),
+                          //     passwordController.text);
+
+                          // setState(() {
+                          //   isLoading = false;
+                          // });
+                          //if (!context.mounted) return;
+                          // if (context.read<StateProvider>().userData.isLogin) {
+                          //   WidgetsBinding.instance.addPostFrameCallback((_) {
+                          //     context.go('/');
+                          //   });
+                          // } else {
+                          //   showCustomSnackbar(
+                          //       context,
+                          //       context
+                          //           .read<StateProvider>()
+                          //           .currentRequestStatus
+                          //           .details);
+                          // }
+                        },
+                        icon: const Icon(Icons.login),
+                        label: const Text("Login")),
+                const SizedBox(
+                  height: 50,
+                )
+              ],
+            ),
           ),
         ),
       ),
