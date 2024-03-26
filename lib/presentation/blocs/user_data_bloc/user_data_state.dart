@@ -34,6 +34,14 @@ class GetUserDataOKState extends UserDataState {
   final CurrentRequestStatus requestStatus;
 
   GetUserDataOKState({required this.userData, required this.requestStatus});
+
+  GetUserDataOKState copyWith(
+      {UserData? userData, CurrentRequestStatus? requestStatus}) {
+    return GetUserDataOKState(
+      userData: userData ?? this.userData,
+      requestStatus: requestStatus ?? this.requestStatus,
+    );
+  }
 }
 
 class GetUserDataLoginFailState extends UserDataState {

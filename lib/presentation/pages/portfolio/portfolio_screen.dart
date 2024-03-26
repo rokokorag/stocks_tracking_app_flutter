@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stocks_tracking_app/models/position_model.dart';
+import 'package:stocks_tracking_app/presentation/blocs/user_data_bloc/user_data_bloc.dart';
 import 'package:stocks_tracking_app/providers/state_provider.dart';
 import 'package:stocks_tracking_app/widgets/side_menu.dart';
 
@@ -27,7 +29,9 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
     setState(() {
       isLoading = true;
     });
-    context.read<StateProvider>().getPortfolio();
+    context.read<UserDataBloc>().getPortfolio();
+    // With Provider
+    //context.read<StateProvider>().getPortfolio();
     setState(() {
       isLoading = false;
     });
@@ -37,7 +41,9 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
     setState(() {
       isLoading = true;
     });
-    context.read<StateProvider>().getPortfolio();
+    context.read<UserDataBloc>().getPortfolio();
+    // With Provider
+    //context.read<StateProvider>().getPortfolio();
     await Future<void>.delayed(const Duration(seconds: 2));
     setState(() {
       isLoading = false;
@@ -48,11 +54,11 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
 
-    List<PositionModel> positions =
-        context.watch<StateProvider>().userData.portfolio;
-    double currentValue = context.watch<StateProvider>().userData.currentValue;
-    double initialInvestment =
-        context.watch<StateProvider>().userData.initialInvestment;
+    // List<PositionModel> positions =
+    //     context.watch<StateProvider>().userData.portfolio;
+    // double currentValue = context.watch<StateProvider>().userData.currentValue;
+    // double initialInvestment =
+    //     context.watch<StateProvider>().userData.initialInvestment;
 
     return Scaffold(
       appBar: AppBar(
@@ -63,49 +69,56 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: themeData.primaryColor,
       ),
-      body: RefreshIndicator(
-        onRefresh: onRefresh,
-        edgeOffset: 0,
-        strokeWidth: 2,
-        backgroundColor: themeData.primaryColor,
-        color: Colors.white,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Skeletonizer(
-            enabled: isLoading,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(
-                  height: 10,
+      body: BlocBuilder<UserDataBloc, UserDataState>(
+        builder: (context, state) {
+          final userState = (state as GetUserDataOKState);
+          return RefreshIndicator(
+            onRefresh: onRefresh,
+            edgeOffset: 0,
+            strokeWidth: 2,
+            backgroundColor: themeData.primaryColor,
+            color: Colors.white,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Skeletonizer(
+                enabled: isLoading,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      // '\$${f.format(currentValue)}',
+                      '\$${f.format(userState.userData.currentValue)}',
+                      style: themeData.textTheme.headlineLarge,
+                    ),
+                    Text(
+                      //'\$${f.format(currentValue - initialInvestment)} (${(((currentValue - initialInvestment) / initialInvestment) * 100).toStringAsFixed(2)}%)',
+                      '\$${f.format(userState.userData.currentValue - userState.userData.initialInvestment)} (${(((userState.userData.currentValue - userState.userData.initialInvestment) / userState.userData.initialInvestment) * 100).toStringAsFixed(2)}%)',
+                      style: themeData.textTheme.titleMedium,
+                    ),
+                    ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: userState.userData.portfolio.length,
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Divider(
+                              height: 0,
+                              thickness: 1,
+                              color: themeData.primaryColor),
+                      itemBuilder: (context, index) {
+                        final position = userState.userData.portfolio[index];
+                        return _StockListItem(
+                            position: position, themeData: themeData);
+                      },
+                    ),
+                  ],
                 ),
-                Text(
-                  '\$${f.format(currentValue)}',
-                  style: themeData.textTheme.headlineLarge,
-                ),
-                Text(
-                  '\$${f.format(currentValue - initialInvestment)} (${(((currentValue - initialInvestment) / initialInvestment) * 100).toStringAsFixed(2)}%)',
-                  style: themeData.textTheme.titleMedium,
-                ),
-                ListView.separated(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: positions.length,
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(
-                          height: 0,
-                          thickness: 1,
-                          color: themeData.primaryColor),
-                  itemBuilder: (context, index) {
-                    final position = positions[index];
-                    return _StockListItem(
-                        position: position, themeData: themeData);
-                  },
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
       drawer: const SideMenu(
         selectedMenu: 0,

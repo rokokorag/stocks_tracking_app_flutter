@@ -18,3 +18,5 @@ class DoLogin extends UserDataEvent {
 
   DoLogin({required this.email, required this.password});
 }
+
+class GetPortfolio extends UserDataEvent {}
