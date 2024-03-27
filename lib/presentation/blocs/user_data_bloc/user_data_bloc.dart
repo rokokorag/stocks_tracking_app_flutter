@@ -16,6 +16,7 @@ class UserDataBloc extends Bloc<UserDataEvent, UserDataState> {
     on<DoLogin>(_onDoLogin);
     on<GetPortfolio>(_onGetPorfolio);
     on<GetSymbolInfo>(_onGetSymbolInfo);
+    on<LogOut>(_onLogOut);
   }
 
   void _onDoLogin(DoLogin event, Emitter<UserDataState> emit) async {
@@ -27,7 +28,6 @@ class UserDataBloc extends Bloc<UserDataEvent, UserDataState> {
   }
 
   void _onGetPorfolio(GetPortfolio event, Emitter<UserDataState> emit) async {
-    print("_onGetPorfolio");
     final GetUserDataState getUserDataOKState = state as GetUserDataState;
     final (userDataPortfolioModel, requestStatus) = await GetPortfolioRequest()
         .getPortfolio(getUserDataOKState.userData.token);
@@ -42,7 +42,6 @@ class UserDataBloc extends Bloc<UserDataEvent, UserDataState> {
 
   void _onGetSymbolInfo(
       GetSymbolInfo event, Emitter<UserDataState> emit) async {
-    print("_onGetSymbolInfo");
     final GetUserDataState getUserDataState = state as GetUserDataState;
 
     final (userDataPortfolioModel, requestStatus) = await GetSymbolRequest()
@@ -57,6 +56,12 @@ class UserDataBloc extends Bloc<UserDataEvent, UserDataState> {
     //     symbolStockDetails: userDataPortfolioModel));
   }
 
+  void _onLogOut(LogOut event, Emitter<UserDataState> emit) async {
+    emit(GetUserDataState(
+        userData: UserData(email: '', token: '', isLogin: false),
+        requestStatus: CurrentRequestStatus('', 200)));
+  }
+
   void doLogin(String email, String password) {
     add(DoLogin(email: email, password: password));
   }
@@ -67,5 +72,9 @@ class UserDataBloc extends Bloc<UserDataEvent, UserDataState> {
 
   void getSymbolInfo(String symbol) {
     add(GetSymbolInfo(symbol: symbol));
+  }
+
+  void logout() {
+    add(LogOut());
   }
 }

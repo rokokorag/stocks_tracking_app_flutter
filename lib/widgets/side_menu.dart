@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:stocks_tracking_app/config/menu.dart';
+import 'package:stocks_tracking_app/presentation/blocs/user_data_bloc/user_data_bloc.dart';
 import 'package:stocks_tracking_app/providers/state_provider.dart';
 
 class SideMenu extends StatefulWidget {
@@ -35,14 +36,23 @@ class _SideMenuState extends State<SideMenu> {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(28, 10, 16, 10),
-          child: Text(
-            context.read<StateProvider>().userData.email,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                color: Theme.of(context).colorScheme.primary),
-          ),
+          child: context.select((UserDataBloc userDataBloc) => Text(
+                (userDataBloc.state as GetUserDataState).userData.email,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Theme.of(context).colorScheme.primary),
+              )),
+
+          // Text(
+          //   context.read<StateProvider>().userData.email,
+          //   textAlign: TextAlign.left,
+          //   style: TextStyle(
+          //       fontWeight: FontWeight.bold,
+          //       fontSize: 15,
+          //       color: Theme.of(context).colorScheme.primary),
+          // ),
         ),
         Divider(
           height: 1,
@@ -66,8 +76,10 @@ class _SideMenuState extends State<SideMenu> {
           margin: const EdgeInsets.symmetric(horizontal: 50),
           child: TextButton.icon(
             onPressed: () {
-              context.read<StateProvider>().logOut();
+              context.read<UserDataBloc>().logout();
               context.go('/login');
+              // context.read<StateProvider>().logOut();
+              // context.go('/login');
             },
             label: const Text("Sign out"),
             icon: const Icon(Icons.logout),

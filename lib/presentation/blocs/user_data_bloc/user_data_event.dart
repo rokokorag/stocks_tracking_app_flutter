@@ -18,3 +18,5 @@ class GetSymbolInfo extends UserDataEvent {
 
   GetSymbolInfo({required this.symbol});
 }
+
+class LogOut extends UserDataEvent {}
