@@ -29,25 +29,32 @@ abstract class UserDataState {
 
 class InitDataUserState extends UserDataState {}
 
-class GetUserDataOKState extends UserDataState {
+class GetUserDataState extends UserDataState {
   final UserData userData;
   final CurrentRequestStatus requestStatus;
+  SymbolStock? symbolStockDetails;
 
-  GetUserDataOKState({required this.userData, required this.requestStatus});
+  GetUserDataState(
+      {required this.userData,
+      required this.requestStatus,
+      this.symbolStockDetails});
 
-  GetUserDataOKState copyWith(
-      {UserData? userData, CurrentRequestStatus? requestStatus}) {
-    return GetUserDataOKState(
+  GetUserDataState copyWith(
+      {UserData? userData,
+      CurrentRequestStatus? requestStatus,
+      SymbolStock? symbolStockDetails}) {
+    return GetUserDataState(
       userData: userData ?? this.userData,
       requestStatus: requestStatus ?? this.requestStatus,
+      symbolStockDetails: symbolStockDetails,
     );
   }
 }
 
-class GetUserDataLoginFailState extends UserDataState {
-  final UserData userData;
+class GetSymbolInfoState extends UserDataState {
+  final SymbolStock symbolStockDetails;
   final CurrentRequestStatus requestStatus;
 
-  GetUserDataLoginFailState(
-      {required this.userData, required this.requestStatus});
+  GetSymbolInfoState(
+      {required this.symbolStockDetails, required this.requestStatus});
 }

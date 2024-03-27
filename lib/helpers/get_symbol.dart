@@ -6,7 +6,7 @@ import 'package:stocks_tracking_app/entities/symbolStock.dart';
 import 'package:stocks_tracking_app/models/symbol_model.dart';
 
 class GetSymbolRequest {
-  Future<(SymbolStock, CurrentRequestStatus)> getPortfolio(
+  Future<(SymbolStock, CurrentRequestStatus)> getSymbolInfo(
       String token, String symbol) async {
     final response = await http.get(
         Uri.parse("https://stock-server-theta.vercel.app/api/symbol/$symbol"),

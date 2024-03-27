@@ -49,14 +49,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocListener<UserDataBloc, UserDataState>(
       listener: (context, state) {
+        final GetUserDataState getUserDataState = state as GetUserDataState;
         setState(() {
           isLoading = false;
         });
-        if (state is GetUserDataOKState) {
+
+        if (getUserDataState.userData.isLogin) {
           context.go('/');
         } else {
-          showCustomSnackbar(context,
-              (state as GetUserDataLoginFailState).requestStatus.details);
+          showCustomSnackbar(context, getUserDataState.requestStatus.details);
         }
       },
       child: Scaffold(

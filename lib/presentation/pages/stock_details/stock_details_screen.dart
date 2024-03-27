@@ -1,20 +1,26 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+//import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:stocks_tracking_app/entities/current_request_status.dart';
+//import 'package:provider/provider.dart';
+//import 'package:stocks_tracking_app/entities/current_request_status.dart';
 import 'package:stocks_tracking_app/entities/symbolStock.dart';
-import 'package:stocks_tracking_app/helpers/get_symbol.dart';
+//import 'package:stocks_tracking_app/helpers/get_symbol.dart';
 import 'package:stocks_tracking_app/models/position_model.dart';
-import 'package:stocks_tracking_app/providers/state_provider.dart';
+import 'package:stocks_tracking_app/presentation/blocs/user_data_bloc/user_data_bloc.dart';
+//import 'package:stocks_tracking_app/providers/state_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StockDetailsScreen extends StatefulWidget {
   static const String name = 'stock_details_screen';
   static const String link = '/stockdetails';
 
-  const StockDetailsScreen({super.key});
+  final PositionModel positionData;
+
+  const StockDetailsScreen({super.key, required this.positionData});
 
   @override
   State<StockDetailsScreen> createState() => _StockDetailsScreenState();
@@ -25,12 +31,14 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<UserDataBloc>().getSymbolInfo(widget.positionData.ticker);
   }
 
   @override
   Widget build(BuildContext context) {
-    final PositionModel positionData =
-        GoRouterState.of(context).extra! as PositionModel;
+    // final PositionModel positionData =
+    //     GoRouterState.of(context).extra! as PositionModel;
+    final PositionModel positionData = widget.positionData;
     themeData = Theme.of(context);
     return Scaffold(
         appBar: AppBar(
@@ -54,29 +62,39 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
           iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: themeData.primaryColor,
         ),
-        body: FutureBuilder(
-          future: GetSymbolRequest().getPortfolio(
-              context.read<StateProvider>().userData.token,
-              positionData.ticker),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final (SymbolStock s, _) =
-                  snapshot.data as (SymbolStock, CurrentRequestStatus);
+        body: BlocBuilder<UserDataBloc, UserDataState>(
+          builder: (context, state) {
+            if (state is GetUserDataState) {
+              final GetUserDataState symbolInfoState = state;
+
+              if (symbolInfoState.symbolStockDetails == null) {
+                return const Center(
+                  child: SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+
+              if (symbolInfoState.requestStatus.httpCode != HttpStatus.ok) {
+                return Center(
+                  child: Column(
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 60,
+                      ),
+                      Text('Error: ${symbolInfoState.requestStatus.details}')
+                    ],
+                  ),
+                );
+              }
+
               return _StockDetails(
-                  positionData: positionData, symbolStockDetails: s);
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 60,
-                    ),
-                    Text('Error: ${snapshot.error}')
-                  ],
-                ),
-              );
+                  positionData: positionData,
+                  symbolStockDetails: symbolInfoState.symbolStockDetails!);
             } else {
               return const Center(
                 child: SizedBox(

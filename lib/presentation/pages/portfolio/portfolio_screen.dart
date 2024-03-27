@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stocks_tracking_app/models/position_model.dart';
 import 'package:stocks_tracking_app/presentation/blocs/user_data_bloc/user_data_bloc.dart';
-import 'package:stocks_tracking_app/providers/state_provider.dart';
+//import 'package:stocks_tracking_app/providers/state_provider.dart';
 import 'package:stocks_tracking_app/widgets/side_menu.dart';
 
 class PortfolioScreen extends StatefulWidget {
@@ -35,6 +35,11 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  void onReturnFromNextScreen() {
+    print('onReturnFromNextScreen');
+    context.read<UserDataBloc>().getPortfolio();
   }
 
   Future<void> onRefresh() async {
@@ -71,53 +76,61 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
       ),
       body: BlocBuilder<UserDataBloc, UserDataState>(
         builder: (context, state) {
-          final userState = (state as GetUserDataOKState);
-          return RefreshIndicator(
-            onRefresh: onRefresh,
-            edgeOffset: 0,
-            strokeWidth: 2,
-            backgroundColor: themeData.primaryColor,
-            color: Colors.white,
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Skeletonizer(
-                enabled: isLoading,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      // '\$${f.format(currentValue)}',
-                      '\$${f.format(userState.userData.currentValue)}',
-                      style: themeData.textTheme.headlineLarge,
-                    ),
-                    Text(
-                      //'\$${f.format(currentValue - initialInvestment)} (${(((currentValue - initialInvestment) / initialInvestment) * 100).toStringAsFixed(2)}%)',
-                      '\$${f.format(userState.userData.currentValue - userState.userData.initialInvestment)} (${(((userState.userData.currentValue - userState.userData.initialInvestment) / userState.userData.initialInvestment) * 100).toStringAsFixed(2)}%)',
-                      style: themeData.textTheme.titleMedium,
-                    ),
-                    ListView.separated(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: userState.userData.portfolio.length,
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Divider(
-                              height: 0,
-                              thickness: 1,
-                              color: themeData.primaryColor),
-                      itemBuilder: (context, index) {
-                        final position = userState.userData.portfolio[index];
-                        return _StockListItem(
-                            position: position, themeData: themeData);
-                      },
-                    ),
-                  ],
+          if (state is GetUserDataState) {
+            final userState = state;
+            return RefreshIndicator(
+              onRefresh: onRefresh,
+              edgeOffset: 0,
+              strokeWidth: 2,
+              backgroundColor: themeData.primaryColor,
+              color: Colors.white,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Skeletonizer(
+                  enabled: isLoading,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        // '\$${f.format(currentValue)}',
+                        '\$${f.format(userState.userData.currentValue)}',
+                        style: themeData.textTheme.headlineLarge,
+                      ),
+                      Text(
+                        //'\$${f.format(currentValue - initialInvestment)} (${(((currentValue - initialInvestment) / initialInvestment) * 100).toStringAsFixed(2)}%)',
+                        '\$${f.format(userState.userData.currentValue - userState.userData.initialInvestment)} (${(((userState.userData.currentValue - userState.userData.initialInvestment) / userState.userData.initialInvestment) * 100).toStringAsFixed(2)}%)',
+                        style: themeData.textTheme.titleMedium,
+                      ),
+                      ListView.separated(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: userState.userData.portfolio.length,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            Divider(
+                                height: 0,
+                                thickness: 1,
+                                color: themeData.primaryColor),
+                        itemBuilder: (context, index) {
+                          final position = userState.userData.portfolio[index];
+                          return _StockListItem(
+                              position: position,
+                              themeData: themeData,
+                              onReturnFromNextScreen: onReturnFromNextScreen);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         },
       ),
       drawer: const SideMenu(
@@ -130,8 +143,12 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 class _StockListItem extends StatelessWidget {
   final PositionModel position;
   final ThemeData themeData;
+  final Function onReturnFromNextScreen;
   final NumberFormat f = NumberFormat('#,##0.00', 'en_US');
-  _StockListItem({required this.position, required this.themeData});
+  _StockListItem(
+      {required this.position,
+      required this.themeData,
+      required this.onReturnFromNextScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +191,10 @@ class _StockListItem extends StatelessWidget {
         ],
       ),
       onTap: () {
-        context.push('/stockdetails', extra: position);
+        context.push('/stockdetails', extra: position).then((value) {
+          print('Stock Details Screen Closed');
+          onReturnFromNextScreen();
+        });
       },
     );
   }

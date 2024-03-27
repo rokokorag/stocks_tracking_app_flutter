@@ -4,14 +4,6 @@ sealed class UserDataEvent {
   const UserDataEvent();
 }
 
-class UserDataAssing extends UserDataEvent {
-  String? email;
-  String? token;
-  bool isLogin = false;
-
-  UserDataAssing({this.email, this.token, this.isLogin = false});
-}
-
 class DoLogin extends UserDataEvent {
   final String email;
   final String password;
@@ -20,3 +12,9 @@ class DoLogin extends UserDataEvent {
 }
 
 class GetPortfolio extends UserDataEvent {}
+
+class GetSymbolInfo extends UserDataEvent {
+  final String symbol;
+
+  GetSymbolInfo({required this.symbol});
+}
