@@ -124,28 +124,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           context.read<UserDataBloc>().doLogin(
                               emailController.text.trim(),
                               passwordController.text);
-
-                          // This code commented works with provider
-                          // await context.read<StateProvider>().doLogin(
-                          //     emailController.text.trim(),
-                          //     passwordController.text);
-
-                          // setState(() {
-                          //   isLoading = false;
-                          // });
-                          //if (!context.mounted) return;
-                          // if (context.read<StateProvider>().userData.isLogin) {
-                          //   WidgetsBinding.instance.addPostFrameCallback((_) {
-                          //     context.go('/');
-                          //   });
-                          // } else {
-                          //   showCustomSnackbar(
-                          //       context,
-                          //       context
-                          //           .read<StateProvider>()
-                          //           .currentRequestStatus
-                          //           .details);
-                          // }
                         },
                         icon: const Icon(Icons.login),
                         label: const Text("Login")),

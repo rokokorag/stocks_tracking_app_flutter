@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stocks_tracking_app/entities/current_request_status.dart';
 import 'package:stocks_tracking_app/entities/symbolStock.dart';

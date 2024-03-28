@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:stocks_tracking_app/config/menu.dart';
 import 'package:stocks_tracking_app/presentation/blocs/user_data_bloc/user_data_bloc.dart';
-import 'package:stocks_tracking_app/providers/state_provider.dart';
 
 class SideMenu extends StatefulWidget {
   final int selectedMenu;
@@ -44,15 +43,6 @@ class _SideMenuState extends State<SideMenu> {
                     fontSize: 15,
                     color: Theme.of(context).colorScheme.primary),
               )),
-
-          // Text(
-          //   context.read<StateProvider>().userData.email,
-          //   textAlign: TextAlign.left,
-          //   style: TextStyle(
-          //       fontWeight: FontWeight.bold,
-          //       fontSize: 15,
-          //       color: Theme.of(context).colorScheme.primary),
-          // ),
         ),
         Divider(
           height: 1,
